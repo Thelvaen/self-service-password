@@ -114,6 +114,10 @@ $pwd_complexity = 0;
 # can be false (disabled)
 # any number >= 2 (number of duplication allowed ie. totoAAAverySecure will fail with 2, because 3 A next to each other)
 $pwd_duplicate_chars = false;
+# Test first char for non alphanumerical values, some applications requires the first char to be alphanumerical
+$pwd_test_first_char = false;
+# Test for numeric sequence
+$pwd_numeric_sequence = false;
 # use pwnedpasswords api v2 to securely check if the password has been on a leak
 $use_pwnedpasswords = false;
 # Show policy constraints message:
