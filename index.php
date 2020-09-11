@@ -188,7 +188,7 @@ $pwd_policy_config = array(
     "pwd_complexity" => $pwd_complexity,
     "use_pwnedpasswords" => $use_pwnedpasswords,
     "pwd_no_special_at_ends" => $pwd_no_special_at_ends,
-    "pwd_test_first_char" => $pwd_test_first_char,
+    "pwd_duplicate_chars" => $pwd_duplicate_chars,
     "pwd_numeric_sequence" => $pwd_numeric_sequence
 );
 

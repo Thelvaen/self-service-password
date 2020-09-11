@@ -198,7 +198,7 @@ function show_policy($messages, $pwd_policy_config, $result)
         return;
     }
     if ($pwd_show_policy === "onerror") {
-        if (!preg_match("/tooshort|toobig|minlower|minupper|mindigit|minspecial|forbiddenchars|sameasold|notcomplex|sameaslogin|firstcharnonalpha|numericsequence|duplicatechars|pwned|specialatends/", $result)) {
+        if (!preg_match("/tooshort|toobig|minlower|minupper|mindigit|minspecial|forbiddenchars|sameasold|notcomplex|sameaslogin|numericsequence|duplicatechars|pwned|specialatends/", $result)) {
             return;
         }
     }
@@ -245,9 +245,6 @@ function show_policy($messages, $pwd_policy_config, $result)
     }
     if ($pwd_duplicate_chars) {
         echo "<li>" . $messages["policyduplicatechars"] . " $pwd_duplicate_chars</li>\n";
-    }
-    if ($pwd_first_char) {
-        echo "<li>" . $messages["policyfirstchar"] . "</li>\n";
     }
     if ($pwd_numeric_sequence) {
         echo "<li>" . $messages["policynumericsequence"] . "</li>\n";
@@ -296,16 +293,19 @@ function check_password_strength($password, $oldpassword, $pwd_policy_config, $l
         $forbidden = count($forbidden_res[0]);
     }
 
-    # 1st char check
-    preg_match("/^(\W)/", $password, $first_chars);
-    $pwd_first_non_alpha = count($first_chars);
-
     # Numeric sequence check
-    $numerics = ["012", "123", "234", "345", "456", "567", "678", "789", "890"];
-    $sequence_regex = "/" . implode("|", $numerics) . "/";
-    preg_match_all($sequence_regex, $password, $sequence);
-    $sequence_numeric = count($sequence);
+    if ($pwd_numeric_sequence) {
+        $numerics = ["012", "123", "234", "345", "456", "567", "678", "789", "890"];
+        $sequence_regex = "/" . implode("|", $numerics) . "/";
+        preg_match_all($sequence_regex, $password, $sequence);
+        $sequence_numeric = count($sequence[0]);
 
+        # Numerical sequence (ie. 123,234, ...)
+        if ($sequence_numeric > 0) {
+            $result = "numericsequence";
+        }
+    }
+    
     # Complexity: checks for lower, upper, special, digits
     if ($pwd_complexity) {
         $complex = 0;
@@ -376,19 +376,9 @@ function check_password_strength($password, $oldpassword, $pwd_policy_config, $l
         $result = "sameaslogin";
     }
 
-    # Test first char for non alphanumerci
-    if ($pwd_first_non_alpha > 0) {
-        $result = "firstcharnonalpha";
-    }
-
     # Duplicate chars
     if ($duplicate_chars > 0) {
         $result = "duplicatechars";
-    }
-
-    # Numerical sequence (ie. 123,234, ...)
-    if ($sequence_numeric > 0) {
-        $result = "numericsequence";
     }
 
     # pwned?
