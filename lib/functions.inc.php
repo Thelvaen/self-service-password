@@ -281,7 +281,7 @@ function check_password_strength($password, $oldpassword, $pwd_policy_config, $l
 
     # Duplication check
     if ($pwd_duplicate_chars && ($pwd_duplicate_chars >= 2)) {
-        $reg = "/(.){" . $pwd_duplicate_chars . ",}/";
+        $reg = "/(.)\1{" . $pwd_duplicate_chars . ",}/";
         preg_match($reg, $password, $duplicate_chars_res);
         $duplicate_chars = count($duplicate_chars_res[0]);
     }
@@ -295,7 +295,7 @@ function check_password_strength($password, $oldpassword, $pwd_policy_config, $l
 
     # Numeric sequence check
     if ($pwd_numeric_sequence) {
-        $numerics = ["012", "123", "234", "345", "456", "567", "678", "789", "890"];
+        $numerics = ["012", "123", "234", "345", "456", "567", "678", "789", "890", "098", "987", "876", "765", "654", "543", "432", "321", "210"];
         $sequence_regex = "/" . implode("|", $numerics) . "/";
         preg_match_all($sequence_regex, $password, $sequence);
         $sequence_numeric = count($sequence[0]);
@@ -305,7 +305,7 @@ function check_password_strength($password, $oldpassword, $pwd_policy_config, $l
             $result = "numericsequence";
         }
     }
-    
+
     # Complexity: checks for lower, upper, special, digits
     if ($pwd_complexity) {
         $complex = 0;
